@@ -8,13 +8,11 @@ class Collector:
     def __init__(self, urns_amount, exp_amount):
         self.urns = np.zeros(urns_amount)  # list which simulates set of urns, each element of a list is an urn
         self.exp_amount = exp_amount
-        # self.count_empty = 0  # counts number of balls needed to fill all urns
-        # self.count_2balls = 0  # # counts number of balls needed to fill at least 1 urn with 2 balls
 
     def insert_ball(self):
         guard = 1
-        count_empty = 0
-        count_2balls = 0
+        count_empty = 0   # counts number of balls needed to fill all urns
+        count_2balls = 0  # counts number of balls needed to fill at least 1 urn with 2 balls
         while 0 in self.urns:
             index = random.randint(0, len(self.urns) - 1)  # draw an index of an urn
             self.urns[index] += 1
@@ -47,28 +45,28 @@ class Collector:
 class Main:
 
     @staticmethod
-    def get_data_for_plot(obj_list):
+    def get_data_for_plot(obj_list, start, stop, step):
         x, y1, y2 = list(), list(), list()
         for i in obj_list:
             y1.append(i.averaging()[0])
             y2.append(i.averaging()[1])
 
-        x = [i for i in range(10, 500, 50)]
+        x = [i for i in range(start, stop, step)]
         return x, y1, y2
 
     @staticmethod
-    def plot_avr(obj_list):
-        x, y1, y2 = Main.get_data_for_plot(obj_list)
+    def plot_avr(obj_list, start, stop, step):
+        x, y1, y2 = Main.get_data_for_plot(obj_list, start, stop, step)
         label_font_size = 20
 
         f1 = plt.figure(1)
-        plt.plot(x, y1)
+        plt.plot(x, y1, 'o')
         plt.title("Every urn filled with at least 1 ball", fontsize=label_font_size)
         plt.xlabel("n", fontsize=label_font_size)
         plt.ylabel("Amount of balls", fontsize=label_font_size)
 
         f2 = plt.figure(2)
-        plt.plot(x, y2)
+        plt.plot(x, y2, 'o')
         plt.title("At least 1 urn with 2 balls", fontsize=label_font_size)
         plt.xlabel("n", fontsize=label_font_size)
         plt.ylabel("Amount of balls", fontsize=label_font_size)
@@ -77,10 +75,13 @@ class Main:
 
 if __name__ == '__main__':
     urn = list()
-    for i in range(10, 500, 50):
-        urn.append(Collector(i, 300))
-    Main.plot_avr(urn)
+    start = 10
+    stop = 500
+    step = 10
+    exp_amount = 500
+    for i in range(start, stop, step):
+        urn.append(Collector(i, exp_amount))
+    Main.plot_avr(urn, start, stop, step)
 
     print("Average number of balls needed to fill every urn:", urn[0].averaging()[0])
     print("and average number of balls needed to fill at least 1 urn with 2 balls:", urn[0].averaging()[1], "for 10 urns")
-
